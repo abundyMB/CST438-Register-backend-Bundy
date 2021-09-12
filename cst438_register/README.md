@@ -3,7 +3,7 @@
 ### Users can view their course schedule and add/drop courses 
 
 ### REST apis  used by front end 
-## Check
+
 #### GET /schedule?year={year}&semester={semester}
 - query parameters - year such as 2021,   semester such as Spring, Fall 
 - result returned JSON for instance of java class ScheduleDTO.    
