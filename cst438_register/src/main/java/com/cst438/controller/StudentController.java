@@ -1,8 +1,5 @@
 package com.cst438.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,25 +43,31 @@ public class StudentController {
 	/*
 	 * Add student to database.
 	 */ 
-	@PostMapping("/addSstudent")
+	@PostMapping("/addStudent")
 	@Transactional
 	public StudentDTO addStudent( @RequestBody StudentDTO studentDTO  ) { 
 		
-		String student_email = "test1@csumb.edu";   // email of student to be added
-		String student_name = "Bob";	// Name of student to be added
+//		String student_email = "test1@csumb.edu";   // email of student to be added
+//		String student_name = "Bob";	// Name of student to be added
+		
+		String student_email = studentDTO.email;
+		String student_name = studentDTO.name;
+		int student_id = studentDTO.student_id;
 		
 		Student student = studentRepository.findByEmail(student_email);
 		
 		if (student == null) {
 			Student newStudent = new Student();
+			newStudent.setStudent_id(student_id);
 			newStudent.setName(student_name);
 			newStudent.setEmail(student_email);
 			
-			Student savedStudent = studentRepository.save(student);
-			int studentId = (studentRepository.findStudentId(newStudent.getEmail()));
- 			newStudent.setStudent_id(studentId);
-			
-			StudentDTO result = createStudentDTO(savedStudent);
+			studentRepository.save(newStudent);
+//			Student savedStudent = studentRepository.save(newStudent);
+//			int studentId = (studentRepository.findStudentId(newStudent.getEmail()));
+// 			newStudent.setStudent_id(studentId);
+//			
+			StudentDTO result = createStudentDTO(newStudent);
 			return result;
 			
 		} else {
@@ -72,27 +75,30 @@ public class StudentController {
 		}
 	}
 	
-	@PutMapping("/putHold")
+	@PostMapping("/putHold")
 	@Transactional
-	public void putRegistrationHold ( @RequestBody StudentDTO studentDTO ) {
+	public StudentDTO putRegistrationHold ( @RequestBody StudentDTO studentDTO ) {
 		
 		Student student = studentRepository.findByEmail(studentDTO.email);
 		
 		if (student == null)
 		{
-			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Student email not found:  " +studentDTO.email);
+			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Student email not found: " + studentDTO.email);
 		}
 		else
 		{
 			student.setStatusCode(1);
 			student.setStatus("HOLD");
 			studentRepository.save(student);
+			
+			StudentDTO result = createStudentDTO(student);
+			return result;
 		}
 	}
 	
-	@PutMapping("/releaseHold")
+	@PostMapping("/releaseHold")
 	@Transactional
-	public void releaseRegistrationHold ( @RequestBody StudentDTO studentDTO ) {
+	public StudentDTO releaseRegistrationHold ( @RequestBody StudentDTO studentDTO ) {
 		
 		Student student = studentRepository.findByEmail(studentDTO.email);
 		
@@ -105,6 +111,9 @@ public class StudentController {
 			student.setStatusCode(0);
 			student.setStatus("CLEAR");
 			studentRepository.save(student);
+			
+			StudentDTO result = createStudentDTO(student);
+			return result;
 		}
 	}
 	

@@ -24,6 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.cst438.controller.ScheduleController;
+import com.cst438.controller.StudentController;
 import com.cst438.domain.Course;
 import com.cst438.domain.CourseRepository;
 import com.cst438.domain.Enrollment;
@@ -50,7 +51,7 @@ import org.springframework.test.context.ContextConfiguration;
  *  addFilters=false turns off security.  (I could not get security to work in test environment.)
  *  WebMvcTest is needed for test environment to create Repository classes.
  */
-@ContextConfiguration(classes = { ScheduleController.class })
+@ContextConfiguration(classes = { StudentController.class })
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest
 public class JunitTestStudent {
@@ -58,7 +59,11 @@ public class JunitTestStudent {
 	static final String URL = "http://localhost:8080";
 	public static final String TEST_STUDENT_EMAIL = "test2@csumb.edu";
 	public static final String TEST_STUDENT_NAME  = "test";
-	public static final int TEST_STUDENT_ID  = 1;
+	public static final int TEST_STUDENT_ID  = 4;
+	
+	public static final String HOLD_TEST_STUDENT_EMAIL = "test@csumb.edu";
+	public static final String HOLD_TEST_STUDENT_NAME  = "test";
+	public static final int HOLD_TEST_STUDENT_ID  = 1;
 
 	@MockBean
 	CourseRepository courseRepository;
@@ -81,14 +86,15 @@ public class JunitTestStudent {
 		MockHttpServletResponse response;
 		
 		Student student = new Student();
+		student.setStudent_id(TEST_STUDENT_ID);
 		student.setEmail(TEST_STUDENT_EMAIL);
 		student.setName(TEST_STUDENT_NAME);
 		student.setStatusCode(0);
-//		student.setStudent_id(1);
+		student.setStatus("CLEAR");
 		
 		// create the DTO (data transfer object) for the student to add. 
 		StudentDTO studentDTO = new StudentDTO();
-		studentDTO.student_id = studentRepository.findStudentId(TEST_STUDENT_EMAIL);
+		studentDTO.student_id = student.getStudent_id();
 		studentDTO.email = student.getEmail();
 		studentDTO.name = student.getName();
 		studentDTO.status = student.getStatus();
@@ -116,29 +122,25 @@ public class JunitTestStudent {
 		// verify that repository save method was called.
 		verify(studentRepository).save(any(Student.class));
 		
-//		StudentDTO addedStudentDTO = studentRepository.findByEmail(TEST_STUDENT_EMAIL);
-//		// verify that returned data contains the added student 
-//		if (s.email == TEST_STUDENT_ID) {
-//				found = true;
-//		}
-//		assertTrue("Added course not in updated schedule.", found);
-		
 		// verify that repository find method was called.
 		verify(studentRepository, times(1)).findByEmail(TEST_STUDENT_EMAIL);
-	}
+	}	
 	
 	@Test
-	public void putRegistrationHold()  throws Exception {
+	public void putHold()  throws Exception {
 		
 		MockHttpServletResponse response;
 		
-		Student student = studentRepository.findByEmail(TEST_STUDENT_EMAIL);
-		student.setStatus("HOLD");
-		student.setStatusCode(1);
+		Student student = new Student();
+		student.setStudent_id(HOLD_TEST_STUDENT_ID);
+		student.setEmail(HOLD_TEST_STUDENT_EMAIL);
+		student.setName(HOLD_TEST_STUDENT_NAME);
 		
-		StudentDTO studentDTO = new StudentDTO(student.getEmail(), student.getName(), 
-												student.getStatusCode(), student.getStatus());
+		// create the DTO (data transfer object) for the student to add. 
+		StudentDTO studentDTO = new StudentDTO();
 		studentDTO.student_id = student.getStudent_id();
+		studentDTO.email = student.getEmail();
+		studentDTO.name = student.getName();
 	
 		// then do an http post request with body of studentDTO as JSON
  		response = mvc.perform(
@@ -157,17 +159,20 @@ public class JunitTestStudent {
 	}
 	
 	@Test
-	public void releaseRegistrationHold()  throws Exception {
+	public void releaseHold()  throws Exception {
 		
-MockHttpServletResponse response;
+		MockHttpServletResponse response;
+				
+		Student student = new Student();
+		student.setStudent_id(HOLD_TEST_STUDENT_ID);
+		student.setEmail(HOLD_TEST_STUDENT_EMAIL);
+		student.setName(HOLD_TEST_STUDENT_NAME);
 		
-		Student student = studentRepository.findByEmail(TEST_STUDENT_EMAIL);
-		student.setStatus("CLEAR");
-		student.setStatusCode(0);
-		
-		StudentDTO studentDTO = new StudentDTO(student.getEmail(), student.getName(), 
-												student.getStatusCode(), student.getStatus());
+		// create the DTO (data transfer object) for the student to add. 
+		StudentDTO studentDTO = new StudentDTO();
 		studentDTO.student_id = student.getStudent_id();
+		studentDTO.email = student.getEmail();
+		studentDTO.name = student.getName();
 	
 		// then do an http post request with body of studentDTO as JSON
  		response = mvc.perform(

@@ -15,6 +15,12 @@ public class StudentDTO {
 		this.status = null;
 	}
 	
+	public StudentDTO(String email, String name)
+	{
+		this.email = email;
+		this.name = name;
+	}
+	
 	public StudentDTO(String name, String email, int statusCode, String status) {
 		this.email=email;
 		this.name=name;
@@ -22,22 +28,9 @@ public class StudentDTO {
 		this.status = status;
 	}
 	
-	public StudentDTO(String email, int statusCode, String status) {
-		this.email=email;
-		this.statusCode = statusCode;
-		this.status = status;
-	}
-	
-	public StudentDTO(String email)
-	{
-		this.email = email;
-	}
-
 	@Override
 	public String toString() {
 		return "StudentDTO [student_id=" + student_id + ", name=" + name + ", email=" + email + ", statusCode="
 				+ statusCode + ", status=" + status + "]";
 	}
-	
-	
 }
