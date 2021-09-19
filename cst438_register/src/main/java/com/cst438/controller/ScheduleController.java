@@ -61,7 +61,6 @@ public class ScheduleController {
 		}
 	}
 	
-
 	
 	@PostMapping("/schedule")
 	@Transactional
