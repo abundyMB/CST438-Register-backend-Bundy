@@ -86,8 +86,7 @@ public class StudentController {
 			
 			student = studentRepository.save(student);
 			
-			StudentDTO result = createStudentDTO(student);
-			return result;
+			return studentDTO;
 		}
 	}
 	
