@@ -3,22 +3,13 @@ package com.cst438.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.cst438.domain.Course;
 import com.cst438.domain.CourseRepository;
-import com.cst438.domain.Enrollment;
 import com.cst438.domain.EnrollmentRepository;
-import com.cst438.domain.ScheduleDTO;
 import com.cst438.domain.Student;
 import com.cst438.domain.StudentRepository;
 import com.cst438.domain.StudentDTO;
@@ -38,7 +29,6 @@ public class StudentController {
 	
 	@Autowired
 	GradebookService gradebookService;
-	
 
 	/*
 	 * Add student to database.
@@ -49,29 +39,22 @@ public class StudentController {
 		Student student = studentRepository.findByEmail(studentDTO.email);
 		
 		if (student == null) {
-			Student newStudent = new Student();
-			newStudent.setName(studentDTO.name);
-			newStudent.setStatusCode(studentDTO.statusCode);
-			newStudent.setStatus(studentDTO.status);
-			studentRepository.save(newStudent);
-			newStudent.setStudent_id(studentRepository.findStudentId(studentDTO.email));
-			studentDTO.student_id = newStudent.getStudent_id();
-			
-			newStudent = studentRepository.save(newStudent);
-			StudentDTO result = createStudentDTO(newStudent);
+			student = new Student();
+			student.setEmail(studentDTO.email);
+			student.setName(studentDTO.name);
+			student.setStatusCode(studentDTO.statusCode);
+			student.setStatus(studentDTO.status);
+			Student savedStudent = studentRepository.save(student);
+			StudentDTO result = createStudentDTO(savedStudent);
 			return result;
 		} else {
-		throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Student already added to database:  " + studentDTO.email);
+			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Student already added to database:  " + studentDTO.email);
+		}
 	}
-}
 
-	
-
-	
-	
-	@PostMapping("/updateStudent")
+	@PostMapping("/registration")
 	@Transactional
-	public StudentDTO updateStudent ( @RequestBody StudentDTO studentDTO ) {
+	public StudentDTO updateRegistration ( @RequestBody StudentDTO studentDTO ) {
 		
 		Student student = studentRepository.findByEmail(studentDTO.email);
 		

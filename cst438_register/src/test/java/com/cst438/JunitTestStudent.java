@@ -59,13 +59,9 @@ import org.springframework.test.context.ContextConfiguration;
 public class JunitTestStudent {
 
 	static final String URL = "http://localhost:8080";
-	public static final String TEST_STUDENT_EMAIL = "test1@csumb.edu";
+	public static final String TEST_STUDENT_EMAIL = "test1000@csumb.edu";
 	public static final String TEST_STUDENT_NAME  = "test";
-	public static final int TEST_STUDENT_ID  = 4;
-	
 	public static final String HOLD_TEST_STUDENT_EMAIL = "test@csumb.edu";
-	public static final String HOLD_TEST_STUDENT_NAME  = "test";
-	public static final int HOLD_TEST_STUDENT_ID  = 1;
 
 	@MockBean
 	CourseRepository courseRepository;
@@ -92,16 +88,19 @@ public class JunitTestStudent {
 		student.setName(TEST_STUDENT_NAME);
 		student.setStatusCode(0);
 		student.setStatus("CLEAR");
+//		student.setStudent_id(1);
+		
+		// given  -- stubs for database repositories that return test data
+	    given(studentRepository.findByEmail(TEST_STUDENT_EMAIL)).willReturn(student);
+	    given(studentRepository.save(any(Student.class))).willReturn(student);
 		
 		// create the DTO (data transfer object) for the student to add. 
 		StudentDTO studentDTO = new StudentDTO();
+		studentDTO.student_id = student.getStudent_id();
 		studentDTO.email = student.getEmail();
 		studentDTO.name = student.getName();
 		studentDTO.status = student.getStatus();
 		studentDTO.statusCode = student.getStatusCode();
-		
-		// given  -- stubs for database repositories that return test data
-	    given(studentRepository.findByEmail(TEST_STUDENT_EMAIL)).willReturn(student);
 		
 		// then do an http post request with body of studentDTO as JSON
 		response = mvc.perform(
@@ -133,12 +132,12 @@ public class JunitTestStudent {
 		
 		Student student = new Student();
 		student.setEmail(HOLD_TEST_STUDENT_EMAIL);
-		student.setName(HOLD_TEST_STUDENT_NAME);
+//		student.setName(HOLD_TEST_STUDENT_NAME);
 		
 		// create the DTO (data transfer object) for the student to add. 
 		StudentDTO studentDTO = new StudentDTO();
 		studentDTO.email = student.getEmail();
-		studentDTO.name = student.getName();
+//		studentDTO.name = student.getName();
 		studentDTO.status = "HOLD";
 		studentDTO.statusCode = 1;
 	
@@ -147,7 +146,7 @@ public class JunitTestStudent {
 		// then do an http post request with body of studentDTO as JSON
  		response = mvc.perform(
  				MockMvcRequestBuilders
- 			      .post("/updateStudent")
+ 			      .post("/registration")
  			      .content(asJsonString(studentDTO))
  			      .contentType(MediaType.APPLICATION_JSON)
  			      .accept(MediaType.APPLICATION_JSON))
@@ -179,7 +178,7 @@ MockHttpServletResponse response;
 		// then do an http post request with body of studentDTO as JSON
  		response = mvc.perform(
  				MockMvcRequestBuilders
- 			      .post("/updateStudent")
+ 			      .post("/registration")
  			      .content(asJsonString(studentDTO))
  			      .contentType(MediaType.APPLICATION_JSON)
  			      .accept(MediaType.APPLICATION_JSON))
