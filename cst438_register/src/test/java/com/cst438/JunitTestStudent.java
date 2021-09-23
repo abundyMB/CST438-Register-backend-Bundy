@@ -88,7 +88,7 @@ public class JunitTestStudent {
 		student.setName(TEST_STUDENT_NAME);
 		student.setStatusCode(0);
 		student.setStatus("CLEAR");
-		student.setStudent_id(1);
+		student.setStudent_id(10);
 		
 		// given  -- stubs for database repositories that return test data
 	    given(studentRepository.findByEmail(TEST_STUDENT_EMAIL)).willReturn(null);
