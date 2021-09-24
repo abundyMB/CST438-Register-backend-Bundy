@@ -61,8 +61,6 @@ public class ScheduleController {
 		}
 	}
 	
-
-	
 	@PostMapping("/schedule")
 	@Transactional
 	public ScheduleDTO.CourseDTO addCourse( @RequestBody ScheduleDTO.CourseDTO courseDTO  ) { 
