@@ -26,7 +26,7 @@ import com.cst438.domain.StudentRepository;
 import com.cst438.service.GradebookService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://cst438register--frontend.herokuapp.com/"})
 public class ScheduleController {
 	
 	
@@ -41,7 +41,6 @@ public class ScheduleController {
 	
 	@Autowired
 	GradebookService gradebookService;
-	
 	
 	/*
 	 * get current schedule for student.
@@ -60,6 +59,7 @@ public class ScheduleController {
 			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Student not found. " );
 		}
 	}
+	
 	
 	@PostMapping("/schedule")
 	@Transactional
@@ -81,7 +81,9 @@ public class ScheduleController {
 			enrollment.setCourse(course);
 			enrollment.setYear(course.getYear());
 			enrollment.setSemester(course.getSemester());
+			System.out.println("enroll id: " + enrollment.getEnrollment_id());
 			Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+			System.out.println("enroll id: " + savedEnrollment.getEnrollment_id());
 			
 			gradebookService.enrollStudent(student_email, student.getName(), course.getCourse_id());
 			
@@ -90,7 +92,6 @@ public class ScheduleController {
 		} else {
 			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Course_id invalid or student not allowed to register for the course.  "+courseDTO.course_id);
 		}
-		
 	}
 	
 	@DeleteMapping("/schedule/{enrollment_id}")
@@ -112,6 +113,8 @@ public class ScheduleController {
 			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Enrollment_id invalid. "+enrollment_id);
 		}
 	}
+
+	
 	
 	/* 
 	 * helper method to transform course, enrollment, student entities into 
@@ -150,5 +153,4 @@ public class ScheduleController {
 		courseDTO.grade = e.getCourseGrade();
 		return courseDTO;
 	}
-	
 }

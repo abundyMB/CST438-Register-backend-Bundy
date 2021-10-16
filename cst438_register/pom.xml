@@ -54,6 +54,7 @@
 		</dependency>
 		<!-- end rabbitmq -->
 		
+		
 		<dependency>
 			<groupId>org.sikuli</groupId>
 			<artifactId>sikuli-api</artifactId>
