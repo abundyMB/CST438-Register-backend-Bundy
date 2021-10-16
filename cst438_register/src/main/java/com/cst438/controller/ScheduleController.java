@@ -60,7 +60,7 @@ public class ScheduleController {
 			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Student not found. " );
 		}
 	}
-	
+
 	@PostMapping("/schedule")
 	@Transactional
 	public ScheduleDTO.CourseDTO addCourse( @RequestBody ScheduleDTO.CourseDTO courseDTO  ) { 
@@ -81,7 +81,9 @@ public class ScheduleController {
 			enrollment.setCourse(course);
 			enrollment.setYear(course.getYear());
 			enrollment.setSemester(course.getSemester());
+			System.out.println("enroll id: " + enrollment.getEnrollment_id());
 			Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+			System.out.println("enroll id: " + savedEnrollment.getEnrollment_id());
 			
 			gradebookService.enrollStudent(student_email, student.getName(), course.getCourse_id());
 			
