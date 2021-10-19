@@ -13,17 +13,9 @@ public interface EnrollmentRepository extends CrudRepository <Enrollment, Intege
 	
 	@Query("select e from Enrollment e where e.enrollment_id=:id")
 	Enrollment findById(@Param("id") int id);
-<<<<<<< HEAD
-	 
-=======
-	
->>>>>>> refs/remotes/origin/Dev
+
 	@Query("select e from Enrollment e where e.student.email=:email and e.year=:year and e.semester=:semester")
-<<<<<<< HEAD
-	public List<Enrollment> findStudentSchedule(@Param("email") String email, @Param("year") int year, @Param("semester") String semester);
-=======
-	public List<Enrollment> findStudentSchedule(@Param("email") String email,  @Param("year") int year, @Param("semester") String semester);
->>>>>>> refs/remotes/origin/Dev
+	List<Enrollment> findStudentSchedule(@Param("email") String email,  @Param("year") int year, @Param("semester") String semester);
 	
 	@Query("select e from Enrollment e where e.student.email=:email and e.course.course_id=:course_id")
 	Enrollment findByEmailAndCourseId(@Param("email") String email, @Param("course_id") int course_id);

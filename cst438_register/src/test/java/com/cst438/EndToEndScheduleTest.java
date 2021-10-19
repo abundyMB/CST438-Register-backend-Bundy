@@ -34,9 +34,10 @@ import com.cst438.domain.EnrollmentRepository;
 @SpringBootTest
 public class EndToEndScheduleTest {
 
-	public static final String CHROME_DRIVER_FILE_LOCATION = "C:\\Users\\fadlg\\Dropbox\\My PC (LAPTOP-T13A7Q9Q)\\Downloads\\edgedriver_win32\\msedgedriver.exe";
+	// TODO: Find chrome driver file location
+	public static final String CHROME_DRIVER_FILE_LOCATION = "";
 
-	public static final String URL = "https://cst438register--frontend.herokuapp.com/";
+	public static final String URL = "https://abundy-cst438register-fe.herokuapp.com";
 
 	public static final String TEST_USER_EMAIL = "test@csumb.edu";
 
@@ -55,7 +56,6 @@ public class EndToEndScheduleTest {
 	@Test
 	public void addCourseTest() throws Exception {
 
-		
 		Enrollment x = null;
 		do {
 			x = enrollmentRepository.findByEmailAndCourseId(TEST_USER_EMAIL, TEST_COURSE_ID);
@@ -118,6 +118,5 @@ public class EndToEndScheduleTest {
 
 			driver.quit();
 		}
-
 	}
 }

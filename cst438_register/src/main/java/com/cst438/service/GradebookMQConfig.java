@@ -16,7 +16,6 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 @ConditionalOnProperty(prefix = "gradebook", name = "service", havingValue = "MQ")
 public class GradebookMQConfig  implements RabbitListenerConfigurer{
 	
-
 	@Bean
 	public Queue gradebookQueue() {
 		return new Queue("gradebook-queue", true);

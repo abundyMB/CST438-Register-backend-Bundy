@@ -18,15 +18,15 @@ import com.cst438.domain.StudentRepository;
 @SpringBootTest
 public class EndToEndAddStudentTest {
 	
-	public static final String EDGE_DRIVER_FILE_LOCATION = "C:\\Users\\fadlg\\Dropbox\\My PC (LAPTOP-T13A7Q9Q)\\Downloads\\edgedriver_win32\\msedgedriver.exe";
-	public static final String URL = "https://cst438register--frontend.herokuapp.com/";
+	// TODO: Find edge driver file location
+	public static final String EDGE_DRIVER_FILE_LOCATION = "";
+	public static final String URL = "https://abundy-cst438register-fe.herokuapp.com";
 	public static final String TEST_USER_EMAIL = "new_student@csumb.edu";
 	public static final String TEST_USER_NAME = "New Student";
 	public static final int SLEEP_DURATION = 1000; // 1 second.
 
 	@Autowired
 	StudentRepository studentRepository;
-	
 	
 	// If the student exists in the database, delete it. This makes the test repeatable.
 	@Test
@@ -73,6 +73,5 @@ public class EndToEndAddStudentTest {
 				studentRepository.delete(e);
 			driver.quit();
 		}
-
 	}
 }

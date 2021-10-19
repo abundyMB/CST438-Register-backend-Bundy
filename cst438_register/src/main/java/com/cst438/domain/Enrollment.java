@@ -32,7 +32,6 @@ public class Enrollment {
 	public void setEnrollment_id(int enrollment_id) {
 		this.enrollment_id = enrollment_id;
 	}
-
 	public Student getStudent() {
 		return student;
 	}
@@ -57,7 +56,6 @@ public class Enrollment {
 	public void setSemester(String semester) {
 		this.semester = semester;
 	}
-	
 	public String getCourseGrade() {
 		return courseGrade;
 	}
@@ -69,9 +67,4 @@ public class Enrollment {
 		return "Enrollment [enrollment_id=" + enrollment_id + ", student=" + student.getEmail() + ", course=" + course.getCourse_id() + ", year="
 				+ year + ", semester=" + semester + ", courseGrade=" + courseGrade + "]";
 	}
-	
-	
-
-	
-	
 }

@@ -26,9 +26,8 @@ import com.cst438.domain.StudentRepository;
 import com.cst438.service.GradebookService;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "https://cst438register--frontend.herokuapp.com/"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://abundy-cst438register-fe.herokuapp.com"})
 public class ScheduleController {
-	
 	
 	@Autowired
 	CourseRepository courseRepository;
@@ -60,13 +59,12 @@ public class ScheduleController {
 		}
 	}
 	
-	
 	@PostMapping("/schedule")
 	@Transactional
 	public ScheduleDTO.CourseDTO addCourse( @RequestBody ScheduleDTO.CourseDTO courseDTO  ) { 
 		
 		String student_email = "test@csumb.edu";   // student's email 
-		
+   
 		Student student = studentRepository.findByEmail(student_email);
 		Course course  = courseRepository.findByCourse_id(courseDTO.course_id);
 		
@@ -75,15 +73,12 @@ public class ScheduleController {
 		// != 0 hold on registration.  student.status may have reason for hold.
 		
 		if (student!= null && course!=null && student.getStatusCode()==0) {
-			// TODO check that today's date is not past add deadline for the course.
 			Enrollment enrollment = new Enrollment();
 			enrollment.setStudent(student);
 			enrollment.setCourse(course);
 			enrollment.setYear(course.getYear());
 			enrollment.setSemester(course.getSemester());
-			System.out.println("enroll id: " + enrollment.getEnrollment_id());
 			Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
-			System.out.println("enroll id: " + savedEnrollment.getEnrollment_id());
 			
 			gradebookService.enrollStudent(student_email, student.getName(), course.getCourse_id());
 			
@@ -100,22 +95,18 @@ public class ScheduleController {
 		
 		String student_email = "test@csumb.edu";   // student's email 
 		
-		// TODO  check that today's date is not past deadline to drop course.
-		
 		Enrollment enrollment = enrollmentRepository.findById(enrollment_id);
 		
 		// verify that student is enrolled in the course.
 		if (enrollment!=null && enrollment.getStudent().getEmail().equals(student_email)) {
-			// OK.  drop the course.
+			// Drop the course.
 			 enrollmentRepository.delete(enrollment);
 		} else {
-			// something is not right with the enrollment.  
+			// Error with HTTP request. 
 			throw  new ResponseStatusException( HttpStatus.BAD_REQUEST, "Enrollment_id invalid. "+enrollment_id);
 		}
 	}
 
-	
-	
 	/* 
 	 * helper method to transform course, enrollment, student entities into 
 	 * a an instance of ScheduleDTO to return to front end.
