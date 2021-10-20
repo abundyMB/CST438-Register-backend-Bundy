@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,8 +18,7 @@ import com.cst438.domain.StudentRepository;
 @SpringBootTest
 public class EndToEndAddStudentTest {
 	
-	// TODO: Find edge driver file location
-	public static final String EDGE_DRIVER_FILE_LOCATION = "";
+	public static final String CHROME_DRIVER_FILE_LOCATION = "/usr/local/bin/chromedriver";
 	public static final String URL = "https://abundy-cst438register-fe.herokuapp.com";
 	public static final String TEST_USER_EMAIL = "new_student@csumb.edu";
 	public static final String TEST_USER_NAME = "New Student";
@@ -39,8 +38,8 @@ public class EndToEndAddStudentTest {
 		} while (x != null);
 		
 		// set the driver location and start driver
-		System.setProperty("webdriver.edge.driver", EDGE_DRIVER_FILE_LOCATION);
-		WebDriver driver = new EdgeDriver();
+		System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_FILE_LOCATION);
+		WebDriver driver = new ChromeDriver();
 		// Puts an Implicit wait for 10 seconds before throwing exception
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		
