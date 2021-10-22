@@ -1,29 +1,33 @@
 package com.cst438.controller;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.security.core.annotation.AuthenticationPrincipal;
+ import org.springframework.security.oauth2.core.user.OAuth2User;
+ import org.springframework.transaction.annotation.Transactional;
+ import org.springframework.web.bind.annotation.CrossOrigin;
+ import org.springframework.web.bind.annotation.DeleteMapping;
+ import org.springframework.web.bind.annotation.GetMapping;
+ import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.RequestParam;
+ import org.springframework.web.bind.annotation.PostMapping;
+ import org.springframework.web.bind.annotation.RequestBody;
+ import org.springframework.web.bind.annotation.RestController;
+ import org.springframework.web.server.ResponseStatusException;
 
-import com.cst438.domain.Course;
-import com.cst438.domain.CourseRepository;
-import com.cst438.domain.Enrollment;
-import com.cst438.domain.EnrollmentRepository;
-import com.cst438.domain.ScheduleDTO;
-import com.cst438.domain.Student;
-import com.cst438.domain.StudentRepository;
-import com.cst438.service.GradebookService;
+ import com.cst438.domain.Admin;
+ import com.cst438.domain.AdminDTO;
+ import com.cst438.domain.AdminRepository;
+ import com.cst438.domain.Course;
+ import com.cst438.domain.CourseRepository;
+ import com.cst438.domain.Enrollment;
+ import com.cst438.domain.EnrollmentRepository;
+ import com.cst438.domain.ScheduleDTO;
+ import com.cst438.domain.Student;
+ import com.cst438.domain.StudentRepository;
+ import com.cst438.service.GradebookService;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "https://abundy-cst438register-fe.herokuapp.com"})
@@ -39,15 +43,19 @@ public class ScheduleController {
 	EnrollmentRepository enrollmentRepository;
 	
 	@Autowired
+ 	AdminRepository adminRepository;
+	
+	@Autowired
 	GradebookService gradebookService;
 	
 	/*
 	 * get current schedule for student.
 	 */
 	@GetMapping("/schedule")
-	public ScheduleDTO getSchedule( @RequestParam("year") int year, @RequestParam("semester") String semester ) {
+	public ScheduleDTO getSchedule( @RequestParam("year") int year, @RequestParam("semester") String semester, 
+																		@AuthenticationPrincipal OAuth2User principal) {
 		
-		String student_email = "test@csumb.edu";   // student's email 
+		String student_email = principal.getAttribute("email");
 		
 		Student student = studentRepository.findByEmail(student_email);
 		if (student != null) {
@@ -61,9 +69,9 @@ public class ScheduleController {
 	
 	@PostMapping("/schedule")
 	@Transactional
-	public ScheduleDTO.CourseDTO addCourse( @RequestBody ScheduleDTO.CourseDTO courseDTO  ) { 
+	public ScheduleDTO.CourseDTO addCourse(@RequestBody ScheduleDTO.CourseDTO courseDTO, @AuthenticationPrincipal OAuth2User principal) { 
 		
-		String student_email = "test@csumb.edu";   // student's email 
+		String student_email = principal.getAttribute("email");
    
 		Student student = studentRepository.findByEmail(student_email);
 		Course course  = courseRepository.findByCourse_id(courseDTO.course_id);
@@ -91,9 +99,9 @@ public class ScheduleController {
 	
 	@DeleteMapping("/schedule/{enrollment_id}")
 	@Transactional
-	public void dropCourse(  @PathVariable int enrollment_id  ) {
+	public void dropCourse(@PathVariable int enrollment_id, @AuthenticationPrincipal OAuth2User principal) {
 		
-		String student_email = "test@csumb.edu";   // student's email 
+		String student_email = principal.getAttribute("email");
 		
 		Enrollment enrollment = enrollmentRepository.findById(enrollment_id);
 		

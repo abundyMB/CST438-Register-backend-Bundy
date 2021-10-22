@@ -79,6 +79,12 @@
 		</dependency>
 		<!-- end selenium -->
 		
+		<!-- for Oauth2 -->
+     	<dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-oauth2-client</artifactId>
+         </dependency>
+ 		<!-- end of Oauth2 -->
 	</dependencies>
 
 	<build>
